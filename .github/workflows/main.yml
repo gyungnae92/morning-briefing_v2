@@ -1,1 +1,35 @@
-cd scripts && pip install -r requirements.txt && python crawl.py
+name: Run Crawler
+
+on:
+  workflow_dispatch:  # 👈 수동 실행 활성화
+    inputs:
+      crawler_type:
+        description: '실행할 크롤러 선택'
+        required: true
+        default: 'crawl'
+        type: choice
+        options:
+          - crawl
+          - youtube_crawler
+          - cbs_crawler
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Python 설정
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: 필수 패키지 설치
+        run: |
+          pip install -r scripts/requirements.txt
+      
+      - name: crawl.py 실행
+        run: |
+          cd scripts
+          python crawl.py
